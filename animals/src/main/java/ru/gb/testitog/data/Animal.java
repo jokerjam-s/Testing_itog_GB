@@ -16,6 +16,18 @@ public interface Animal {
     String getName();
 
     /**
+     * Установить дату рождения
+     * @param date
+     */
+    void setDateBirth(String date);
+
+    /**
+     * Получить дату рождедния
+     * @return
+     */
+    String getDateBirth();
+
+    /**
      * Установить имя животного
      * @param name - новое имя
      */

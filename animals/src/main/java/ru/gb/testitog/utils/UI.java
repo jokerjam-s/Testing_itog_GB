@@ -1,28 +1,30 @@
 package ru.gb.testitog.utils;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-public class UserInterface {
+public class UI {
     /**
-     * вывод и запрос действия меню
-     * @param menu
+     * вывод и запрос действия меню, если пользователь вводит не существующий ключ - вернет пустое значение
+     * @param menu - словарь для отображения меню, key - ожидаемый ввод от пользователя, value - пункт меню
      * @return
      */
-
-    public int showMenu(List<String> menu) {
+    public String menuShow(Map<String, String> menu) {
         Scanner scanner = new Scanner(System.in);
-        int mm = 0;
+        String answear;
 
-        for (String s : menu) {
-            System.out.println(s);
+        for (String s : menu.keySet()) {
+            System.out.println(s + " - " + menu.get(s));
+        }
+        System.out.println("> ");
+
+        answear = scanner.next();
+
+        if(!menu.containsKey(answear)){
+            answear = "";
         }
 
-        mm = scanner.nextInt();
-
-        mm = (mm < 0 || mm > menu.size() - 1) ? 0 : mm;
-
-        return mm;
+        return answear;
     }
 
     /**

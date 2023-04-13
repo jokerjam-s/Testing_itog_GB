@@ -2,20 +2,23 @@ package ru.gb.testitog.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Hamster implements Animal {
     private String name;
     private String color;
-    List<String> commands;
+    private List<String> commands;
+    private String dateBirth;
 
     public Hamster() {
-        this("", "", new ArrayList<>());
+        this("", "", "", new ArrayList<>());
     }
 
-    public Hamster(String name, String color, List<String> commands) {
+    public Hamster(String name, String color, String dateBirth, List<String> commands) {
         this.name = name;
         this.color = color;
         this.commands = commands;
+        this.dateBirth = dateBirth;
     }
 
     /**
@@ -100,5 +103,46 @@ public class Hamster implements Animal {
     @Override
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * Установить дату рождения
+     *
+     * @param date
+     */
+    @Override
+    public void setDateBirth(String date) {
+        this.dateBirth = date;
+    }
+
+    /**
+     * Получить дату рождедния
+     *
+     * @return
+     */
+    @Override
+    public String getDateBirth() {
+        return this.dateBirth;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Хомяк ").append(name).append(" ").append(color).append(" - ").append(dateBirth);
+
+        return builder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hamster hamster = (Hamster) o;
+        return Objects.equals(name, hamster.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
