@@ -3,6 +3,7 @@ package ru.gb.testitog.controller;
 import ru.gb.testitog.data.Cat;
 import ru.gb.testitog.data.Dog;
 import ru.gb.testitog.data.Hamster;
+import ru.gb.testitog.services.AnimalCounter;
 import ru.gb.testitog.services.AnimalList;
 import ru.gb.testitog.utils.UI;
 
@@ -10,7 +11,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class AnimalController {
-    private final AnimalList animalList = new AnimalList();
+    private final AnimalList<Object> animalList = new AnimalList<>();
     private final UI ui = new UI();
 
     // главное меню
@@ -18,6 +19,8 @@ public class AnimalController {
         put("1", "Добавить животное");
         put("2", "Добавить команду");
         put("3", "Отобразить список");
+        put("4", "Показать команды");
+        put("5", "Показать кол-во животных");
         put("0", "Выход");
     }};
     // меню второго уровня
@@ -33,41 +36,90 @@ public class AnimalController {
         put("0", "НЕТ");
     }};
 
-    private enum ANIMALS {CAT, DOG, HAMSTER}
+    private enum ANIMALS {CAT, DOG, HAMSTER};
 
-    ;
-
-    public void Run() {
+    public void Run() throws Exception {
         String menu;
         do {
             menu = getOperation();
 
-
             switch (menu) {
-                case "11":
-                    addAnimal(ANIMALS.CAT);
-                    break;
-                case "12":
-                    addAnimal(ANIMALS.DOG);
-                    break;
-                case "13":
-                    addAnimal(ANIMALS.HAMSTER);
-                    break;
-                case "21":
-                    break;
-                case "22":
-                    break;
-                case "23":
-                    break;
-                case "31":
-                    break;
-                case "32":
-                    break;
-                case "33":
-                    break;
+                case "11" -> addAnimal(ANIMALS.CAT);
+                case "12" -> addAnimal(ANIMALS.DOG);
+                case "13" -> addAnimal(ANIMALS.HAMSTER);
+                case "21" -> addCommand(ANIMALS.CAT);
+                case "22" -> addCommand(ANIMALS.DOG);
+                case "23" -> addCommand(ANIMALS.HAMSTER);
+                case "31" -> showAnimals(ANIMALS.CAT);
+                case "32" -> showAnimals(ANIMALS.DOG);
+                case "33" -> showAnimals(ANIMALS.HAMSTER);
+                case "41" -> showCommands(ANIMALS.CAT);
+                case "42" -> showCommands(ANIMALS.DOG);
+                case "43" -> showCommands(ANIMALS.HAMSTER);
+                case "5" -> showCountAnimals();
             }
-        } while (!(menu.isEmpty() && menu.equals("0")));
+        } while (!(menu.isEmpty() || menu.equals("0")));
+    }
 
+    private void showCountAnimals() throws Exception{
+        try(AnimalCounter counter = new AnimalCounter()){
+            Logger.getAnonymousLogger().info(counter.getCount().toString());
+        }
+    }
+
+    /**
+     * Отобразить список команд животного
+     * @param animal
+     */
+    private void showCommands(ANIMALS animal){
+        String name = ui.getString("Имя животного: ");
+
+        Object o = null;
+
+        switch (animal){
+            case CAT -> o = animalList.findCat(name);
+            case DOG -> o = animalList.findDog(name);
+            case HAMSTER -> o = animalList.findHamster(name);
+        }
+
+        if(o == null){
+            Logger.getAnonymousLogger().info("Животное не найдено");
+            return;
+        }
+
+        List<String> commands = null;
+
+        switch (animal){
+            case CAT -> commands = ((Cat)o).getCommandList();
+            case DOG -> commands = ((Dog)o).getCommandList();
+            case HAMSTER -> commands = ((Hamster)o).getCommandList();
+        }
+
+        StringBuilder strCommands = new StringBuilder();
+        for (String c :commands) {
+            strCommands.append(c).append(", ");
+        }
+
+        Logger.getAnonymousLogger().info(strCommands.toString());
+    }
+
+    /**
+     * Отображение списка животных
+     * @param animal
+     */
+    private void showAnimals(ANIMALS animal){
+        List<Object> animals = null;
+
+        switch (animal){
+            case CAT -> animals = animalList.getCats();
+            case DOG -> animals = animalList.getDogs();
+            case HAMSTER -> animals = animalList.getHamsters();
+        }
+
+        Logger logger = Logger.getAnonymousLogger();
+        for (Object o : animals) {
+            logger.info(o.toString());
+        }
     }
 
     /**
@@ -102,7 +154,13 @@ public class AnimalController {
      * Добавленеи нового животного
      * @param animal - вид добавляемого животного
      */
-    private void addAnimal(ANIMALS animal) {
+    private void addAnimal(ANIMALS animal) throws Exception {
+        // Счетчик
+        try(AnimalCounter counter = new AnimalCounter()){
+            counter.add();
+        }
+
+
         String name = ui.getString("Имя животного: ");
         String color = ui.getString("Окрас: ");
         String date = ui.getString("Дата рождения: ");
@@ -131,7 +189,7 @@ public class AnimalController {
      */
     private String getOperation() {
         String menu = ui.menuShow(menuMain);
-        if (!menu.isEmpty()) {
+        if (!menu.isEmpty() && !menu.equals("0") && !menu.equals("5")) {
             menu += ui.menuShow(menuAnimal);
         }
 

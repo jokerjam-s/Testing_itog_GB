@@ -16,7 +16,7 @@ public class UI {
         for (String s : menu.keySet()) {
             System.out.println(s + " - " + menu.get(s));
         }
-        System.out.println("> ");
+        System.out.print("> ");
 
         answear = scanner.next();
 
@@ -35,7 +35,7 @@ public class UI {
     public int getInteger(String message){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(message);
+        System.out.print(message);
         return scanner.nextInt();
     }
 
@@ -47,7 +47,7 @@ public class UI {
     public String getString(String message){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(message);
+        System.out.print(message);
         return scanner.next();
     }
 
