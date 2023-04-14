@@ -71,7 +71,7 @@ public class AnimalList <Animal> {
         Cat cat = null;
 
         try {
-            cats.stream().filter(c -> c.getName().equals(name)).findFirst().get();
+            cat = cats.stream().filter(c -> c.getName().equals(name)).findFirst().get();
         }
         catch (NoSuchElementException ex){
             cat = null;
@@ -84,7 +84,7 @@ public class AnimalList <Animal> {
         Dog dog = null;
 
         try {
-            dogs.stream().filter(c -> c.getName().equals(name)).findFirst().get();
+            dog = dogs.stream().filter(c -> c.getName().equals(name)).findFirst().get();
         }
         catch (NoSuchElementException ex){
             dog = null;
@@ -97,7 +97,7 @@ public class AnimalList <Animal> {
         Hamster hamster = null;
 
         try {
-            hamsters.stream().filter(c -> c.getName().equals(name)).findFirst().get();
+            hamster = hamsters.stream().filter(c -> c.getName().equals(name)).findFirst().get();
         }
         catch (NoSuchElementException ex){
             hamster = null;
